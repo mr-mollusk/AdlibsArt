@@ -1,16 +1,15 @@
 import { Button, Center, HStack } from "@chakra-ui/react";
 import { IArtwork } from "entities";
-import { FC, useState } from "react";
+import { FC } from "react";
 
 interface IPagination {
-  pageIndex: number;
+  pageIndex?: number;
   totalPages: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   setArtworks: React.Dispatch<React.SetStateAction<IArtwork[]>>;
 }
 
 export const Pagination: FC<IPagination> = ({
-  pageIndex,
   totalPages,
   setPage,
   setArtworks,
