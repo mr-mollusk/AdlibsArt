@@ -1,4 +1,4 @@
-import { Center, Heading, VStack } from "@chakra-ui/react";
+import { Heading, VStack } from "@chakra-ui/react";
 import { Artwork, IArtwork } from "entities";
 import { FC, useEffect, useState } from "react";
 

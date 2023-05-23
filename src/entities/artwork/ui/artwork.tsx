@@ -7,7 +7,6 @@ import {
   VStack,
   Text,
   Badge,
-  Flex,
 } from "@chakra-ui/react";
 import { FC } from "react";
 import { IArtwork } from "..";
