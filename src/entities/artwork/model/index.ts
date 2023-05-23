@@ -1,0 +1,1 @@
+export type {IArtwork} from './type'

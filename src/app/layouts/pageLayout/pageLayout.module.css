@@ -1,0 +1,23 @@
+.layout {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  grid-template-rows: 50px auto 50px;
+  grid-template-areas: "header header" "nav main" "footer footer";
+}
+
+.layout header {
+  grid-area: header;
+  border-bottom: 1px solid var(--black);
+}
+.layout main {
+  grid-area: main;
+  min-height: calc(100vh - 100px);
+}
+.layout aside {
+  grid-area: nav;
+  border-right: 1px solid var(--black);
+}
+.layout footer {
+  grid-area: footer;
+  border-top: 1px solid var(--black);
+}
