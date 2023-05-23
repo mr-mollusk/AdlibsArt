@@ -1,4 +1,4 @@
-import { Heading, VStack } from "@chakra-ui/react";
+import { Heading, VStack, Text } from "@chakra-ui/react";
 import { Artwork, IArtwork } from "entities";
 import { FC, useEffect, useState } from "react";
 
@@ -9,9 +9,11 @@ export const ArtworksList: FC = () => {
       .then((result) => result.json())
       .then((data) => setArtworks(data));
   }, []);
-
+  if (artworks.length === 0) {
+    return <Text>...loading</Text>;
+  }
   return (
-    <VStack padding={5}>
+    <VStack padding={5} bg="cyan.200">
       <Heading>Книжные подборки</Heading>
       {artworks.map((artwork) => (
         <Artwork {...artwork} />

@@ -21,7 +21,7 @@ export const Artwork: FC<IArtwork> = ({
   console.log(description);
 
   return (
-    <Card minW="100%">
+    <Card minW="100%" bg='cyan.100'>
       <CardBody>
         <HStack>
           <Image src={imageUrl} width="20%" alt={`${title} image`} />
