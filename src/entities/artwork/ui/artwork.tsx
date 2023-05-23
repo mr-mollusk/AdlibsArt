@@ -6,7 +6,8 @@ import {
   Image,
   VStack,
   Text,
-  Badge,
+  Wrap,
+  Tag,
 } from "@chakra-ui/react";
 import { FC } from "react";
 import { IArtwork } from "..";
@@ -18,21 +19,22 @@ export const Artwork: FC<IArtwork> = ({
   authors,
   categories,
 }) => {
-  console.log(description);
 
   return (
-    <Card minW="100%" bg='cyan.100'>
+    <Card minW="100%" bg="cyan.100">
       <CardBody>
         <HStack>
           <Image src={imageUrl} width="20%" alt={`${title} image`} />
           <VStack alignItems="flex-start">
             <Heading>{title}</Heading>
             <Text>{description}</Text>
-            <HStack>
+            <Wrap>
               {categories.map(({ id, name }) => (
-                <Badge key={id}>{name}</Badge>
+                <Tag colorScheme="purple" key={id}>
+                  {name}
+                </Tag>
               ))}
-            </HStack>
+            </Wrap>
             <HStack>
               <Text>Авторы:</Text>
               {authors.map(({ id, name }) => (
