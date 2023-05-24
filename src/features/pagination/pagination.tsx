@@ -16,7 +16,6 @@ export const Pagination: FC<IPagination> = ({
 }) => {
   const arr = Array.from(Array(totalPages + 1).keys()).slice(1);
   const paginationHandler = (newPageIndex: number) => {
-    console.log(1);
 
     setPage(newPageIndex);
     fetch(

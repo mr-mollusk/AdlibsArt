@@ -1,6 +1,6 @@
 import { Heading, VStack, Text } from "@chakra-ui/react";
 import { Artwork, IArtwork } from "entities";
-import { Pagination } from "features";
+import { Pagination, Search } from "features";
 import { FC, useEffect, useState } from "react";
 
 export const ArtworksList: FC = () => {
@@ -23,8 +23,9 @@ export const ArtworksList: FC = () => {
     return <Text>...loading</Text>;
   }
   return (
-    <VStack paddingX={100} bg="cyan.200">
-      <Heading>Книжные подборки</Heading>
+    <VStack paddingX={100} bg="cyan.200" alignItems="flex-start">
+      <Heading>Каталог</Heading>
+      <Search setArtworks={setArtworks} />
       {artworks.map((artwork) => (
         <Artwork key={artwork.id} {...artwork} />
       ))}
