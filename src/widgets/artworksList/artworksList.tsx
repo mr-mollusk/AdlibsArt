@@ -1,40 +1,40 @@
 import { Heading, VStack, Text } from "@chakra-ui/react";
 import { Artwork, IArtwork } from "entities";
-import { Pagination, Search } from "features";
+import { observer } from "mobx-react-lite";
 import { FC, useEffect, useState } from "react";
+import { artworksAPI } from "shared";
+import { useStore } from "./context";
+import { Pagination } from "features";
+import { Search } from "features/search";
 
-export const ArtworksList: FC = () => {
+export const ArtworksList: FC = observer(() => {
+  const store = useStore((store) => store);
   const [artworks, setArtworks] = useState<IArtwork[]>([]);
-  const [page, setPage] = useState(0);
-  const [pagesCount, setPagesCount] = useState(0);
   useEffect(() => {
-    fetch(
-      "https://25.39.246.253:50443/api/artworks/search?pageIndex=1&pageSize=10"
-    )
-      .then((result) => result.json())
-      .then((data) => {
-        setArtworks(data.artworks);
-        setPage(data.pageIndex);
-        setPagesCount(data.totalPages);
-      });
-  }, []);
-
-  if (artworks.length === 0) {
-    return <Text>...loading</Text>;
-  }
+    artworksAPI.getArtworks({}).then((data) => {
+      if (!data[0])
+        store.setArtworks(
+          data[1].artworks,
+          data[1].totalPages,
+          data[1].pageIndex
+        );
+    });
+  }, [store]);
+  useEffect(() => {
+    setArtworks(store.getArtworks());
+  }, [store.artworks]);
   return (
     <VStack paddingX={100} bg="cyan.200" alignItems="flex-start">
       <Heading>Каталог</Heading>
-      <Search setArtworks={setArtworks} />
-      {artworks.map((artwork) => (
-        <Artwork key={artwork.id} {...artwork} />
-      ))}
-      <Pagination
-        pageIndex={page}
-        totalPages={pagesCount}
-        setPage={setPage}
-        setArtworks={setArtworks}
-      />
+      <Search />
+      {artworks.length !== 0 ? (
+        store.artworks.map((artwork) => (
+          <Artwork key={artwork.id} {...artwork} />
+        ))
+      ) : (
+        <Text>Либо идет загрузка, либо, Никита, почини пагинацию</Text>
+      )}
+      <Pagination />
     </VStack>
   );
-};
+});

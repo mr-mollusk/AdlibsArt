@@ -1,43 +1,22 @@
 import { Button, Center, HStack } from "@chakra-ui/react";
-import { IArtwork } from "entities";
+import { observer } from "mobx-react-lite";
 import { FC } from "react";
+import { useStore } from "widgets/artworksList/context";
 
-interface IPagination {
-  pageIndex?: number;
-  totalPages: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  setArtworks: React.Dispatch<React.SetStateAction<IArtwork[]>>;
-}
+export const Pagination: FC = observer(() => {
+  const { totalPages } = useStore(store => store);
+  const changePage = useStore(store => store.changePage.bind(store));
+  const pagesArray = Array.from(Array(totalPages + 1).keys()).slice(1);
 
-export const Pagination: FC<IPagination> = ({
-  totalPages,
-  setPage,
-  setArtworks,
-}) => {
-  const arr = Array.from(Array(totalPages + 1).keys()).slice(1);
-  const paginationHandler = (newPageIndex: number) => {
-
-    setPage(newPageIndex);
-    fetch(
-      `https://25.39.246.253:50443/api/artworks/search?pageIndex=${newPageIndex}&pageSize=10`
-    )
-      .then((result) => result.json())
-      .then((data) => {
-        setArtworks(data.artworks);
-      });
-  };
   return (
-    <Center>
+    <Center w="100%">
       <HStack>
-        {arr.map((p) => (
-          <Button
-            onClick={() => paginationHandler(p)}
-            key={`pagination_page_${p}`}
-          >
-            {p}
+        {pagesArray.map((page) => (
+          <Button key={page} onClick={() => changePage(page)}>
+            {page}
           </Button>
         ))}
       </HStack>
     </Center>
   );
-};
+});

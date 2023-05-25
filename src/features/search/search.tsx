@@ -9,51 +9,34 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { IArtwork } from "entities";
+import { observer } from "mobx-react-lite";
 import { FC, useState } from "react";
+import { useStore } from "widgets/artworksList/context";
 
-interface ISearch {
-  setArtworks: React.Dispatch<React.SetStateAction<IArtwork[]>>;
-}
-
-export const Search: FC<ISearch> = ({ setArtworks }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+export const Search: FC = observer(() => {
+  const [search, setSearch] = useState("");
+  const filterData = useStore((store) => store.filterPage.bind(store));
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-  const searchButtonHandler = () => {
-    fetch(
-      `https://25.39.246.253:50443/api/artworks/search?query=${searchQuery}&pageIndex=1&pageSize=10`
-    )
-      .then((result) => result.json())
-      .then((data) => {
-        setArtworks(data.artworks);
-      });
+    setSearch(e.target.value);
   };
   return (
     <Box w="100%">
       <FormControl>
         <HStack>
           <InputGroup>
-            <Input
-              bg="white"
-              onChange={(e) => inputHandler(e)}
-              // value={searchQuery}
-            />
+            <Input bg="white" onChange={(e) => inputHandler(e)} />
             <InputRightElement p="5px">
               <IconButton
                 aria-label="Search database"
                 icon={<Search2Icon />}
                 size="sm"
-                onClick={searchButtonHandler}
+                onClick={() => filterData(search)}
               />
             </InputRightElement>
           </InputGroup>
-          <Button colorScheme="teal" onClick={searchButtonHandler}>
-            Поиск
-          </Button>
+          <Button onClick={() => filterData(search)}>Найти</Button>
         </HStack>
       </FormControl>
     </Box>
   );
-};
+});
