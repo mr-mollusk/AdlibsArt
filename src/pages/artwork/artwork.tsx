@@ -13,7 +13,7 @@ import {
   Wrap,
 } from "@chakra-ui/react";
 import { PageLayout } from "app/layouts";
-import { Artwork, IArtwork } from "entities";
+import { IArtwork } from "entities";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { artworksAPI } from "shared";
