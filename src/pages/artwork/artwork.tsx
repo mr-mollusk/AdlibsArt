@@ -1,3 +1,17 @@
+import {
+  Card,
+  CardBody,
+  CircularProgress,
+  Container,
+  Flex,
+  HStack,
+  Heading,
+  Image,
+  Tag,
+  Text,
+  VStack,
+  Wrap,
+} from "@chakra-ui/react";
 import { PageLayout } from "app/layouts";
 import { Artwork, IArtwork } from "entities";
 import { FC, useEffect, useState } from "react";
@@ -6,14 +20,7 @@ import { artworksAPI } from "shared";
 
 export const ArtworkPage: FC = () => {
   const { artwokID } = useParams();
-  const [artwork, setArtwork] = useState<IArtwork>({
-    title: "",
-    id: "1",
-    description: "",
-    imageUrl: "",
-    authors: [],
-    categories: [],
-  });
+  const [artwork, setArtwork] = useState<IArtwork>();
   useEffect(() => {
     if (artwokID)
       artworksAPI.getArtworkById(artwokID).then((data) => {
@@ -23,7 +30,45 @@ export const ArtworkPage: FC = () => {
 
   return (
     <PageLayout>
-      <Artwork {...artwork} />
+      <Flex bg="cyan.200" minH="calc(100vh - 100px)">
+        {artwork ? (
+          <Container maxW="container.lg" py="40px">
+            <Card w="100%" minH="300px">
+              <CardBody minH="300px">
+                <HStack minH="300px">
+                  <Image w="35%" src={artwork.imageUrl} />
+                  <VStack h="100%" alignItems="flex-start">
+                    <Heading>{artwork.title}</Heading>
+                    <Text>{artwork.description}</Text>
+                    <VStack alignItems="flex-start">
+                      <Heading size="md">Категории:</Heading>
+                      <Wrap>
+                        {artwork.categories.map((category) => (
+                          <Tag key={category.id} bg="cyan.100" color="black">
+                            {category.name}
+                          </Tag>
+                        ))}
+                      </Wrap>
+                    </VStack>
+                    <VStack alignItems="flex-start">
+                      <Heading size="md">Авторы:</Heading>
+                      <Wrap>
+                        {artwork.authors.map((author) => (
+                          <Text key={author.id}>{author.name}</Text>
+                        ))}
+                      </Wrap>
+                    </VStack>
+                  </VStack>
+                </HStack>
+              </CardBody>
+            </Card>
+          </Container>
+        ) : (
+          <Flex flex="1 1 100%" alignItems="center" justifyContent="center">
+            <CircularProgress isIndeterminate />
+          </Flex>
+        )}
+      </Flex>
     </PageLayout>
   );
 };

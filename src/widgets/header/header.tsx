@@ -1,10 +1,22 @@
-import { Center, Heading, LinkBox, LinkOverlay } from "@chakra-ui/react";
+import {
+  Flex,
+  Heading,
+  Link,
+  LinkBox,
+  LinkOverlay,
+  Text,
+} from "@chakra-ui/react";
 import { FC } from "react";
 
 export const Header: FC = () => {
   return (
     <header>
-      <Center pr={30} justifyContent="flex-end" h="100%" bg="cyan.900">
+      <Flex
+        h="100%"
+        bg="cyan.900"
+        alignItems="center"
+        justifyContent="space-around"
+      >
         <LinkBox>
           <LinkOverlay href="/">
             <Heading color="white" textTransform="uppercase" fontSize="xl">
@@ -12,7 +24,19 @@ export const Header: FC = () => {
             </Heading>
           </LinkOverlay>
         </LinkBox>
-      </Center>
+        <Link color="white" href="/">
+          <Text>Каталог</Text>
+        </Link>
+        <Link color="white">
+          <Text>Авторы</Text>
+        </Link>
+        <Link color="white">
+          <Text>Категории</Text>
+        </Link>
+        <Link color="white">
+          <Text>Коллекции</Text>
+        </Link>
+      </Flex>
     </header>
   );
 };

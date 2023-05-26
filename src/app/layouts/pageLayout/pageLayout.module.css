@@ -1,25 +1,18 @@
 .layout {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  grid-template-rows: 50px auto 50px;
-  grid-template-areas: "header topbar" "nav main" "footer footer";
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .layout header {
-  grid-area: header;
-}
-
-.layout .topbar {
-  grid-area: topbar;
+  flex: 0 0 50px;
 }
 
 .layout main {
-  grid-area: main;
-  min-height: calc(100vh - 100px);
+  flex: 0 1 100%;
+  min-height: calc(100vh - 100px);  
 }
-.layout aside {
-  grid-area: nav;
-}
+
 .layout footer {
-  grid-area: footer;
+  flex: 0 0 50px;
 }
