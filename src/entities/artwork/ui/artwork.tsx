@@ -24,7 +24,7 @@ const Artwork: FC<IArtwork> = ({
       <CardBody>
         <HStack>
           <Image src={imageUrl} width="20%" alt={`${title} image`} />
-          <VStack alignItems="flex-start">
+          <VStack alignItems="flex-start" w='80%'>
             <Heading>{title}</Heading>
             <Text>{description}</Text>
             <Wrap>
@@ -34,12 +34,12 @@ const Artwork: FC<IArtwork> = ({
                 </Tag>
               ))}
             </Wrap>
-            <HStack>
+            <Wrap>
               <Text>Авторы:</Text>
               {authors.map(({ id, name }) => (
                 <Text key={id}>{name}</Text>
               ))}
-            </HStack>
+            </Wrap>
           </VStack>
         </HStack>
       </CardBody>

@@ -1,1 +1,1 @@
-export { Artwork } from "./artwork";
+export * from "./artwork";
