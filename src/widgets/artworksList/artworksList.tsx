@@ -7,13 +7,15 @@ import {
   CircularProgress,
   Container,
 } from "@chakra-ui/react";
-import { Artwork, IArtwork } from "entities";
+import { IArtwork } from "entities";
 import { observer } from "mobx-react-lite";
-import { FC, useEffect, useState } from "react";
+import React, { FC, Suspense, useEffect, useState } from "react";
 import { artworksAPI } from "shared";
 import { useStore } from "./context";
 import { Pagination } from "features";
 import { Search } from "features/search";
+
+const Artwork = React.lazy(() => import("../../entities/artwork/ui/artwork"));
 
 export const ArtworksList: FC = observer(() => {
   const store = useStore((store) => store);
@@ -31,6 +33,7 @@ export const ArtworksList: FC = observer(() => {
   useEffect(() => {
     setArtworks(store.getArtworks());
   }, [store.artworks]);
+
   return (
     <Flex bg="cyan.200" alignItems="flex-start">
       <Container
@@ -45,8 +48,14 @@ export const ArtworksList: FC = observer(() => {
       >
         <Heading mb="26px">Каталог</Heading>
         <Search />
-        {artworks.length !== 0 ? (
-          <VStack my='20px'>
+        <Suspense
+          fallback={
+            <Flex>
+              <CircularProgress isIndeterminate />
+            </Flex>
+          }
+        >
+          <VStack my="20px">
             {store.artworks.map((artwork) => (
               <LinkBox key={artwork.id}>
                 <LinkOverlay href={`/artwork/${artwork.id}`}>
@@ -54,12 +63,9 @@ export const ArtworksList: FC = observer(() => {
                 </LinkOverlay>
               </LinkBox>
             ))}
-          </VStack >
-        ) : (
-          <Flex flex="1 1 100%" alignItems="center" justifyContent="center">
-            <CircularProgress isIndeterminate />
-          </Flex>
-        )}
+          </VStack>
+        </Suspense>
+
         <Pagination />
       </Container>
     </Flex>

@@ -12,7 +12,7 @@ import {
 import { FC } from "react";
 import { IArtwork } from "..";
 
-export const Artwork: FC<IArtwork> = ({
+const Artwork: FC<IArtwork> = ({
   title,
   description,
   imageUrl,
@@ -46,3 +46,5 @@ export const Artwork: FC<IArtwork> = ({
     </Card>
   );
 };
+
+export default Artwork;
