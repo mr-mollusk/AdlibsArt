@@ -5,7 +5,7 @@ export const NavBar: FC = () => {
   return (
     <aside>
       <VStack w="100%" h="100%" bg="cyan.600">
-        <Link>
+        <Link href="/">
           <Text fontSize="2xl" color="white">
             Каталог
           </Text>

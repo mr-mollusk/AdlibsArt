@@ -19,7 +19,6 @@ export const Artwork: FC<IArtwork> = ({
   authors,
   categories,
 }) => {
-
   return (
     <Card minW="100%" bg="cyan.100">
       <CardBody>
