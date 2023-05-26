@@ -1,10 +1,11 @@
-import { Catalog } from "pages";
 import "./styles/index.css";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routing";
 
 function App() {
   return (
     <>
-      <Catalog />
+      <RouterProvider router={router} />
     </>
   );
 }
