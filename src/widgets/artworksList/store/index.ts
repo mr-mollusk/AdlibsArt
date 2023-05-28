@@ -1,3 +1,4 @@
+import { RootStore } from "app/store/rootStore";
 import { IArtwork } from "entities";
 import { makeAutoObservable } from "mobx";
 import { artworksAPI } from "shared";
@@ -9,7 +10,7 @@ export class ArtworksStore {
   pageSize: number;
   totalCount: number;
   totalPages: number;
-  constructor() {
+  constructor(public rootStore: RootStore) {
     this.artworks = [];
     this.query = "";
     this.pageIndex = 1;

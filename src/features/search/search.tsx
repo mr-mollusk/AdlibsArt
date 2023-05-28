@@ -9,13 +9,15 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
+import { useStore } from "app/hooks/useStore";
 import { observer } from "mobx-react-lite";
 import { FC, useState } from "react";
-import { useStore } from "widgets/artworksList/context";
 
 export const Search: FC = observer(() => {
   const [search, setSearch] = useState("");
-  const filterData = useStore((store) => store.filterPage.bind(store));
+  const filterData = useStore((store) =>
+    store.artworksStore.filterPage.bind(store)
+  );
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
