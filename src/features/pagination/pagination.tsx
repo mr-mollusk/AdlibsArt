@@ -1,11 +1,13 @@
 import { Button, Center, HStack } from "@chakra-ui/react";
+import { useStore } from "app/hooks/useStore";
 import { observer } from "mobx-react-lite";
 import { FC } from "react";
-import { useStore } from "widgets/artworksList/context";
 
 export const Pagination: FC = observer(() => {
-  const { totalPages, pageIndex } = useStore((store) => store);
-  const changePage = useStore((store) => store.changePage.bind(store));
+  const { totalPages, pageIndex } = useStore((store) => store.artworksStore);
+  const changePage = useStore((store) =>
+    store.artworksStore.changePage.bind(store)
+  );
   const pagesArray = Array.from(Array(totalPages + 1).keys()).slice(1);
 
   return (

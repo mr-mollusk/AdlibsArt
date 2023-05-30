@@ -10,7 +10,11 @@ export const PageLayout: FC<IPageLayout> = ({ children }) => {
       <Header />
       <Box bg="cyan.600" className={s.topbar} />
       {/* <NavBar /> */}
-      <main>{children}</main>
+      <main>
+        <Box bg="cyan.100" minH="calc(100vh - 100px)">
+          {children}
+        </Box>
+      </main>
       <Footer />
     </main>
   );

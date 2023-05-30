@@ -10,22 +10,18 @@ import {
 import { observer } from "mobx-react-lite";
 import React, { FC, Suspense, useEffect } from "react";
 import { artworksAPI } from "shared";
-import { useStore } from "./context";
 import { Pagination } from "features";
 import { Search } from "features/search";
+import { useStore } from "app/hooks/useStore";
 
 const Artwork = React.lazy(() => import("../../entities/artwork/ui/artwork"));
 
 export const ArtworksList: FC = observer(() => {
-  const store = useStore((store) => store);
+  const store = useStore((store) => store.artworksStore);
   useEffect(() => {
     artworksAPI.getArtworks({}).then((data) => {
       if (!data[0])
-        store.setArtworks(
-          data[1].artworks,
-          data[1].totalPages,
-          data[1].pageIndex
-        );
+        store.setArtworks(data[1].items, data[1].totalPages, data[1].pageIndex);
     });
   }, [store]);
 

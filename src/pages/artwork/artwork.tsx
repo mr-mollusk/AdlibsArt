@@ -14,17 +14,23 @@ import {
 } from "@chakra-ui/react";
 import { PageLayout } from "app/layouts";
 import { IArtwork } from "entities";
+import { observer } from "mobx-react-lite";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { artworksAPI } from "shared";
 
-export const ArtworkPage: FC = () => {
+export const ArtworkPage: FC = observer(() => {
   const { artwokID } = useParams();
   const [artwork, setArtwork] = useState<IArtwork>();
+
   useEffect(() => {
     if (artwokID)
       artworksAPI.getArtworkById(artwokID).then((data) => {
-        if (!data[0]) setArtwork(data[1]);
+        if (!data[0]) {
+          setArtwork(data[1]);
+        } else {
+          console.log(data[1]);
+        }
       });
   }, []);
 
@@ -71,4 +77,4 @@ export const ArtworkPage: FC = () => {
       </Flex>
     </PageLayout>
   );
-};
+});
