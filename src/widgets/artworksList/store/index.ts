@@ -40,10 +40,9 @@ export class ArtworksStore {
       pageIndex: newPage,
       query: this.query,
     });
-    console.log(data[1]);
 
     if (!data[0]) {
-      this.artworks = data[1].artworks;
+      this.artworks = data[1].items;
       this.pageIndex = data[1].pageIndex;
       this.totalPages = data[1].totalPages;
     }
@@ -51,7 +50,7 @@ export class ArtworksStore {
   async filterPage(query: string) {
     const data = await artworksAPI.getArtworks({ query: query });
     if (!data[0]) {
-      this.artworks = data[1].artworks;
+      this.artworks = data[1].items;
       this.pageIndex = data[1].pageIndex;
       this.totalPages = data[1].totalPages;
       this.query = query;

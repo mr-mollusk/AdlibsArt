@@ -9,7 +9,7 @@ export type PaginatedArtworkResponse = {
   pageIndex: number;
   totalPages: number;
   totalCount: number;
-  artworks: IArtwork[];
+  items: IArtwork[];
 };
 
 export type FilteredArtworkRequest = {
@@ -18,4 +18,3 @@ export type FilteredArtworkRequest = {
   pageIndex?: number;
   pageSize?: number;
 };
-

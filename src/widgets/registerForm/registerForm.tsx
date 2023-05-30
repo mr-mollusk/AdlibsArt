@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useStore } from "app/hooks/useStore";
 import { observer } from "mobx-react-lite";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { authAPI } from "shared/api/auth/auth.api";
 // import { Link } from "react-router-dom";
 
@@ -41,7 +41,6 @@ export const RegisterForm = observer(() => {
           password: password,
         });
         if (!error) {
-          console.log(data);
         } else console.error(data);
       } else
         toast({
@@ -60,9 +59,7 @@ export const RegisterForm = observer(() => {
         isClosable: true,
       });
   };
-  useEffect(() => {
-    console.log(store.username);
-  }, [store.username]);
+
   return (
     <Container maxW="556px" py="30px">
       <Card>

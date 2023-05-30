@@ -8,7 +8,9 @@ export interface IAuthBody {
   password: string;
 }
 export interface IRefreshBody {
+  id: string;
   refreshToken: string;
+  accessToken: string;
 }
 export interface IAuthResponse {
   id: string;

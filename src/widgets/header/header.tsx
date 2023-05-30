@@ -9,9 +9,23 @@ import {
   LinkOverlay,
   Text,
 } from "@chakra-ui/react";
-import { FC } from "react";
+import { useStore } from "app/hooks/useStore";
+import { observer } from "mobx-react-lite";
+import { FC, useEffect, useState } from "react";
 
-export const Header: FC = () => {
+export const Header: FC = observer(() => {
+  const [isLogin, setIsLogin] = useState(false);
+  const userStore = useStore((store) => store.userStore);
+  const logout = useStore((store) => store.userStore.logout.bind(userStore));
+  useEffect(() => {
+    const login = localStorage.getItem("accessToken");
+    if (login) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [userStore.isLogin, isLogin]);
+
   return (
     <header>
       <Box bg="cyan.900" h="100%">
@@ -39,17 +53,23 @@ export const Header: FC = () => {
                 <Text>Категории</Text>
               </Link>
             </HStack>
-            <HStack spacing="40px">
-              <Link color="white" href="/auth">
-                <Text>Вход</Text>
+            {isLogin ? (
+              <Link color="white" onClick={logout}>
+                <Text>Выход</Text>
               </Link>
-              <Link color="white" href="/register">
-                <Text>Регистрация</Text>
-              </Link>
-            </HStack>
+            ) : (
+              <HStack spacing="40px">
+                <Link color="white" href="/auth">
+                  <Text>Вход</Text>
+                </Link>
+                <Link color="white" href="/register">
+                  <Text>Регистрация</Text>
+                </Link>
+              </HStack>
+            )}
           </Flex>
         </Container>
       </Box>
     </header>
   );
-};
+});
