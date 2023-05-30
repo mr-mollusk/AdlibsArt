@@ -1,6 +1,8 @@
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Card,
   CardBody,
+  CardHeader,
   CircularProgress,
   Container,
   Flex,
@@ -28,8 +30,6 @@ export const ArtworkPage: FC = observer(() => {
       artworksAPI.getArtworkById(artwokID).then((data) => {
         if (!data[0]) {
           setArtwork(data[1]);
-        } else {
-          console.log(data[1]);
         }
       });
   }, []);
@@ -40,6 +40,14 @@ export const ArtworkPage: FC = observer(() => {
         {artwork ? (
           <Container maxW="container.lg" py="40px">
             <Card w="100%" minH="300px">
+              <CardHeader>
+                <Flex justifyContent="flex-end">
+                  <HStack spacing="5px">
+                    <EditIcon />
+                    <DeleteIcon />
+                  </HStack>
+                </Flex>
+              </CardHeader>
               <CardBody minH="300px">
                 <HStack minH="300px">
                   <Image w="35%" src={artwork.imageUrl} />

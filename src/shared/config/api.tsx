@@ -21,9 +21,11 @@ apiInstance.interceptors.response.use(
   },
   async (response) => {
     if (response.response.status === 401) {
+      const originalRequest = response.config;
       const refreshToken = localStorage.getItem("refreshToken");
       const accessToken = localStorage.getItem("accessToken");
       const userId = localStorage.getItem("userID");
+      console.log("я тут");
       if (refreshToken && accessToken && userId) {
         const [error, data] = await authAPI.refresh({
           refreshToken: refreshToken,
@@ -34,7 +36,9 @@ apiInstance.interceptors.response.use(
           localStorage.setItem("accessToken", data.accessToken);
           localStorage.setItem("refreshToken", data.refreshToken);
           localStorage.setItem("userID", data.id);
-          location.reload();
+          console.log("Ало, я тут");
+
+          return apiInstance.request(originalRequest);
         }
       }
     }
