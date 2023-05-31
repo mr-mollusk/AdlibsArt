@@ -16,7 +16,7 @@ import { FC, useState } from "react";
 export const Search: FC = observer(() => {
   const [search, setSearch] = useState("");
   const filterData = useStore((store) =>
-    store.artworksStore.filterPage.bind(store)
+    store.artworksStore.filterPage.bind(store.artworksStore)
   );
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);

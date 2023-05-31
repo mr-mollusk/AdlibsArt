@@ -42,9 +42,8 @@ export class ArtworksStore {
     });
 
     if (!data[0]) {
-      this.artworks = data[1].items;
-      this.pageIndex = data[1].pageIndex;
-      this.totalPages = data[1].totalPages;
+      this.setArtworks(data[1].items, data[1].totalPages, data[1].pageIndex);
+      console.log(this.artworks);
     }
   }
   async filterPage(query: string) {

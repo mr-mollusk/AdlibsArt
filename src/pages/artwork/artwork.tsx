@@ -8,6 +8,7 @@ import {
   Flex,
   HStack,
   Heading,
+  IconButton,
   Image,
   Tag,
   Text,
@@ -18,11 +19,12 @@ import { PageLayout } from "app/layouts";
 import { IArtwork } from "entities";
 import { observer } from "mobx-react-lite";
 import { FC, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { artworksAPI } from "shared";
 
 export const ArtworkPage: FC = observer(() => {
   const { artwokID } = useParams();
+  const navigate = useNavigate();
   const [artwork, setArtwork] = useState<IArtwork>();
 
   useEffect(() => {
@@ -33,6 +35,12 @@ export const ArtworkPage: FC = observer(() => {
         }
       });
   }, []);
+  const deleteHandler = async () => {
+    if (artwokID) {
+      const [error] = await artworksAPI.deleteArtworkById(artwokID);
+      if (!error) navigate("/");
+    }
+  };
 
   return (
     <PageLayout>
@@ -44,7 +52,9 @@ export const ArtworkPage: FC = observer(() => {
                 <Flex justifyContent="flex-end">
                   <HStack spacing="5px">
                     <EditIcon />
-                    <DeleteIcon />
+                    <IconButton aria-label={""} onClick={deleteHandler}>
+                      <DeleteIcon />
+                    </IconButton>
                   </HStack>
                 </Flex>
               </CardHeader>

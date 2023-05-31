@@ -19,19 +19,25 @@ import { Search } from "features/search";
 import { useStore } from "app/hooks/useStore";
 import { AddIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
+import { toJS } from "mobx";
 
 const Artwork = React.lazy(() => import("../../entities/artwork/ui/artwork"));
 
 export const ArtworksList: FC = observer(() => {
-  const store = useStore((store) => store.artworksStore);
+  const { artworks } = useStore((store) => store.artworksStore);
+  const setArtworks = useStore((store) =>
+    store.artworksStore.setArtworks.bind(store.artworksStore)
+  );
   const navigate = useNavigate();
   useEffect(() => {
     artworksAPI.getArtworks({}).then((data) => {
       if (!data[0])
-        store.setArtworks(data[1].items, data[1].totalPages, data[1].pageIndex);
+        setArtworks(data[1].items, data[1].totalPages, data[1].pageIndex);
     });
-  }, [store]);
-
+  }, []);
+  useEffect(() => {
+    console.log(toJS(artworks));
+  }, [artworks]);
   return (
     <Flex bg="cyan.200" alignItems="flex-start">
       <Container
@@ -69,7 +75,7 @@ export const ArtworksList: FC = observer(() => {
           }
         >
           <VStack my="20px">
-            {store.artworks.map((artwork) => (
+            {artworks.map((artwork) => (
               <LinkBox key={artwork.id} w="100%">
                 <LinkOverlay href={`/artwork/${artwork.id}`}>
                   <Artwork {...artwork} />

@@ -6,7 +6,7 @@ import { FC } from "react";
 export const Pagination: FC = observer(() => {
   const { totalPages, pageIndex } = useStore((store) => store.artworksStore);
   const changePage = useStore((store) =>
-    store.artworksStore.changePage.bind(store)
+    store.artworksStore.changePage.bind(store.artworksStore)
   );
   const pagesArray = Array.from(Array(totalPages + 1).keys()).slice(1);
 
