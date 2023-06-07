@@ -1,5 +1,6 @@
 import { ArtworkPage, AuthPage, Catalog, RegisterPage } from "pages";
 import { AddArtwork } from "pages/addArtwork/addArtwork";
+import { AuthorsPage } from "pages/authors";
 import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
@@ -20,7 +21,8 @@ export const router = createBrowserRouter([
     element: <AuthPage />,
   },
   {
-    path: "add",
+    path: "/add",
     element: <AddArtwork />,
   },
+  { path: "/authors", element: <AuthorsPage /> },
 ]);

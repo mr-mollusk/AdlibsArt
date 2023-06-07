@@ -85,7 +85,7 @@ export const ArtworksList: FC = observer(() => {
           </VStack>
         </Suspense>
 
-        <Pagination />
+        <Pagination paginationType="artworks" />
       </Container>
     </Flex>
   );

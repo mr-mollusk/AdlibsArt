@@ -2,7 +2,7 @@ import axios from "axios";
 import { authAPI } from "shared/api/auth/auth.api";
 
 export const apiInstance = axios.create({
-  baseURL: "https://25.39.246.253:50443/api",
+  baseURL: "https://25.39.246.253:51443/api",
   headers: {
     "Content-Type": "application/json",
   },
