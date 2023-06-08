@@ -54,13 +54,15 @@ export const CategoriesPage = observer(() => {
       setCategories(data.items, data.totalPages, data.pageIndex);
     }
   };
-  const handleAddCategory = () => {
-    categoriesAPI.addCategory({
+  const handleAddCategory = async () => {
+    const [error] = await categoriesAPI.addCategory({
       name: name,
       description: description,
     });
-    handleGetCategories();
-    onClose();
+    if (!error) {
+      handleGetCategories();
+      onClose();
+    }
   };
   const handleDelete = async (id: number) => {
     const [error] = await categoriesAPI.deleteCategoryById(id);

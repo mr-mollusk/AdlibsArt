@@ -56,14 +56,16 @@ export const AuthorsPage = observer(() => {
     }
   }, [isOpen]);
 
-  const handleAddAuthor = () => {
-    authorsAPI.addAuthor({
+  const handleAddAuthor = async () => {
+    const [error] = await authorsAPI.addAuthor({
       name: name,
       description: description,
       birthCountry: country,
     });
-    handleGetAuthors();
-    onClose();
+    if (!error) {
+      handleGetAuthors();
+      onClose();
+    }
   };
   const handleDelete = async (id: string) => {
     const [error] = await authorsAPI.deleteAuthorById(id);
