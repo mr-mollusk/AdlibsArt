@@ -14,4 +14,6 @@ export interface ICategory {
 
 export interface CategoriesRequest {
   query?: string;
+  pageSize?: number;
+  pageIndex?: number;
 }

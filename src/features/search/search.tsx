@@ -22,6 +22,9 @@ export const Search: FC<ISearch> = observer(({ searchType }) => {
   const filterAuthorsData = useStore((store) =>
     store.authorsStore.filterPage.bind(store.authorsStore)
   );
+  const filterCategoriesData = useStore((store) =>
+    store.categoriesStore.filterPage.bind(store.categoriesStore)
+  );
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
@@ -35,6 +38,11 @@ export const Search: FC<ISearch> = observer(({ searchType }) => {
         filterAuthorsData(search);
         break;
       }
+      case "categories": {
+        filterCategoriesData(search);
+        break;
+      }
+
       default:
         break;
     }

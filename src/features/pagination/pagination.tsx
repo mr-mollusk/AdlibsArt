@@ -9,11 +9,15 @@ export const Pagination: FC<IPagination> = observer(({ paginationType }) => {
   const [totalPages, setTotalPages] = useState(0);
   const artworkStore = useStore((store) => store.artworksStore);
   const authorsStore = useStore((store) => store.authorsStore);
+  const categoriesStore = useStore((store) => store.categoriesStore);
   const artworksChangePage = useStore((store) =>
     store.artworksStore.changePage.bind(store.artworksStore)
   );
   const authorsChangePage = useStore((store) =>
     store.authorsStore.changePage.bind(store.authorsStore)
+  );
+  const categoriesChangePage = useStore((store) =>
+    store.categoriesStore.changePage.bind(store.categoriesStore)
   );
   const pagesArray = Array.from(Array(totalPages + 1).keys()).slice(1);
 
@@ -30,10 +34,15 @@ export const Pagination: FC<IPagination> = observer(({ paginationType }) => {
         setTotalPages(authorsStore.totalPages);
         break;
       }
+      case "categories": {
+        setPageIndex(categoriesStore.pageIndex);
+        setTotalPages(categoriesStore.totalPages);
+        break;
+      }
       default:
         break;
     }
-  }, [artworkStore.artworks, authorsStore.authors]);
+  }, [artworkStore.artworks, authorsStore.authors, categoriesStore.categories]);
   const handleChangePage = (page: number) => {
     switch (paginationType) {
       case "artworks": {
@@ -42,6 +51,10 @@ export const Pagination: FC<IPagination> = observer(({ paginationType }) => {
       }
       case "authors": {
         authorsChangePage(page);
+        break;
+      }
+      case "categories": {
+        categoriesChangePage(page);
         break;
       }
       default:

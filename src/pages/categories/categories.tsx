@@ -30,49 +30,47 @@ import { Pagination } from "features";
 import { Search } from "features/search";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
-import { authorsAPI } from "shared";
+import { categoriesAPI } from "shared/api/categories";
 
-export const AuthorsPage = observer(() => {
+export const CategoriesPage = observer(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [country, setCountry] = useState("");
-
-  const { authors, totalPages, pageIndex } = useStore(
-    (store) => store.authorsStore
+  const { categories, totalPages, pageIndex } = useStore(
+    (store) => store.categoriesStore
   );
-  const setAuthors = useStore((store) =>
-    store.authorsStore.setAuthors.bind(store.authorsStore)
+  const setCategories = useStore((store) =>
+    store.categoriesStore.setCategories.bind(store.categoriesStore)
   );
-  const handleGetAuthors = async () => {
-    const [error, data] = await authorsAPI.getAuthors({});
-    if (!error) {
-      setAuthors(data.items, data.totalPages, data.pageIndex);
-    }
-  };
   useEffect(() => {
     if (!isOpen) {
       setName("");
       setDescription("");
-      setCountry("");
     }
   }, [isOpen]);
+  const handleGetCategories = async () => {
+    const [error, data] = await categoriesAPI.getCategories({});
+    if (!error) {
+      console.log(data.items);
 
-  const handleAddAuthor = () => {
-    authorsAPI.addAuthor({
+      setCategories(data.items, data.totalPages, data.pageIndex);
+    }
+  };
+  const handleAddCategory = () => {
+    categoriesAPI.addCategory({
       name: name,
       description: description,
-      birthCountry: country,
     });
-    handleGetAuthors();
+    handleGetCategories();
     onClose();
   };
-  const handleDelete = async (id: string, index: number) => {
-    const [error, data] = await authorsAPI.deleteAuthorById(id);
-    if (!error) handleGetAuthors();
+  const handleDelete = async (id: number, index: number) => {
+    const [error, data] = await categoriesAPI.deleteCategoryById(id);
+
+    if (!error) handleGetCategories();
   };
   useEffect(() => {
-    handleGetAuthors();
+    handleGetCategories();
   }, []);
   return (
     <PageLayout>
@@ -94,13 +92,6 @@ export const AuthorsPage = observer(() => {
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </FormControl>
-              <FormControl>
-                <FormLabel>Страна рождения</FormLabel>
-                <Input
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                />
-              </FormControl>
             </VStack>
           </ModalBody>
 
@@ -108,7 +99,7 @@ export const AuthorsPage = observer(() => {
             <Button colorScheme="red" mr={3} onClick={onClose}>
               Закрыть
             </Button>
-            <Button colorScheme="blue" onClick={handleAddAuthor}>
+            <Button colorScheme="blue" onClick={handleAddCategory}>
               Добавить
             </Button>
           </ModalFooter>
@@ -124,28 +115,28 @@ export const AuthorsPage = observer(() => {
           >
             Добавить
           </Button>
-          <Search searchType="authors" />
-          {authors.map((author, index) => (
-            <Card w="100%" bg="cyan.100" key={author.id}>
+          <Search searchType="categories" />
+          {categories.map((category, index) => (
+            <Card w="100%" bg="cyan.100" key={category.id}>
               <CardHeader>
                 <Flex alignItems="center">
-                  <Heading>{author.name}</Heading>
+                  <Heading>{category.name}</Heading>
                   <Spacer />
                   <IconButton
                     aria-label="delete-button"
-                    onClick={() => handleDelete(author.id, index)}
+                    onClick={() => handleDelete(category.id, index)}
                   >
                     <DeleteIcon />
                   </IconButton>
                 </Flex>
               </CardHeader>
               <CardBody>
-                <Text>{author.description}</Text>
+                <Text>{category.description}</Text>
               </CardBody>
             </Card>
           ))}
         </VStack>
-        <Pagination paginationType="authors" />
+        <Pagination paginationType="categories" />
       </Container>
     </PageLayout>
   );
