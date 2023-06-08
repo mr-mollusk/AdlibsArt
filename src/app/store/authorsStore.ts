@@ -42,16 +42,15 @@ export class AuthorsStore {
 
     if (!data[0]) {
       this.setAuthors(data[1].items, data[1].totalPages, data[1].pageIndex);
-      console.log(this.authors);
     }
   }
-  //   async filterPage(query: string) {
-  //     const data = await artworksAPI.getArtworks({ query: query });
-  //     if (!data[0]) {
-  //       this.artworks = data[1].items;
-  //       this.pageIndex = data[1].pageIndex;
-  //       this.totalPages = data[1].totalPages;
-  //       this.query = query;
-  //     }
-  //   }
+  async filterPage(query: string) {
+    const data = await authorsAPI.getAuthors({ query: query });
+    if (!data[0]) {
+      this.authors = data[1].items;
+      this.pageIndex = data[1].pageIndex;
+      this.totalPages = data[1].totalPages;
+      this.query = query;
+    }
+  }
 }

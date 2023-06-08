@@ -22,7 +22,6 @@ export const Pagination: FC<IPagination> = observer(({ paginationType }) => {
       case "artworks": {
         setPageIndex(artworkStore.pageIndex);
         setTotalPages(artworkStore.totalPages);
-        console.log(1);
 
         break;
       }
@@ -34,7 +33,6 @@ export const Pagination: FC<IPagination> = observer(({ paginationType }) => {
       default:
         break;
     }
-    console.log(artworkStore);
   }, [artworkStore.artworks, authorsStore.authors]);
   const handleChangePage = (page: number) => {
     switch (paginationType) {

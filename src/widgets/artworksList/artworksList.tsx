@@ -66,7 +66,7 @@ export const ArtworksList: FC = observer(() => {
             </HStack>
           </Button>
         </Flex>
-        <Search />
+        <Search searchType="artworks" />
         <Suspense
           fallback={
             <Flex alignItems="center" justifyContent="center">

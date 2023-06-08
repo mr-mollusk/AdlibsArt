@@ -7,14 +7,14 @@ export interface PaginatedAuthorsResponse {
 }
 
 export interface IAuthors {
-  id: number;
+  id: string;
   name: string;
   description: string;
+  birthCountry: string;
 }
 
 export interface CategoriesRequest {
   query?: string;
   pageSize?: number;
   pageIndex?: number;
-  
 }
