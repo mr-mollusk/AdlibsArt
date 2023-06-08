@@ -2,7 +2,7 @@ import axios from "axios";
 import { authAPI } from "shared/api/auth/auth.api";
 
 export const apiInstance = axios.create({
-  baseURL: "https://25.39.246.253:50443/api",
+  baseURL: "https://25.39.246.253:51443/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -21,6 +21,7 @@ apiInstance.interceptors.response.use(
   },
   async (response) => {
     if (response.response.status === 401) {
+      const originalRequest = response.config;
       const refreshToken = localStorage.getItem("refreshToken");
       const accessToken = localStorage.getItem("accessToken");
       const userId = localStorage.getItem("userID");
@@ -34,7 +35,8 @@ apiInstance.interceptors.response.use(
           localStorage.setItem("accessToken", data.accessToken);
           localStorage.setItem("refreshToken", data.refreshToken);
           localStorage.setItem("userID", data.id);
-          location.reload();
+
+          return apiInstance.request(originalRequest);
         }
       }
     }

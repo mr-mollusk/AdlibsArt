@@ -46,10 +46,10 @@ export const Header: FC = observer(() => {
               <Link color="white" href="/">
                 <Text>Каталог</Text>
               </Link>
-              <Link color="white">
+              <Link color="white" href="/authors">
                 <Text>Авторы</Text>
               </Link>
-              <Link color="white">
+              <Link color="white" href="/categories">
                 <Text>Категории</Text>
               </Link>
             </HStack>

@@ -6,6 +6,10 @@ import {
   Flex,
   CircularProgress,
   Container,
+  Spacer,
+  Button,
+  HStack,
+  Text,
 } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import React, { FC, Suspense, useEffect } from "react";
@@ -13,18 +17,27 @@ import { artworksAPI } from "shared";
 import { Pagination } from "features";
 import { Search } from "features/search";
 import { useStore } from "app/hooks/useStore";
+import { AddIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
+import { toJS } from "mobx";
 
 const Artwork = React.lazy(() => import("../../entities/artwork/ui/artwork"));
 
 export const ArtworksList: FC = observer(() => {
-  const store = useStore((store) => store.artworksStore);
+  const { artworks } = useStore((store) => store.artworksStore);
+  const setArtworks = useStore((store) =>
+    store.artworksStore.setArtworks.bind(store.artworksStore)
+  );
+  const navigate = useNavigate();
   useEffect(() => {
     artworksAPI.getArtworks({}).then((data) => {
       if (!data[0])
-        store.setArtworks(data[1].items, data[1].totalPages, data[1].pageIndex);
+        setArtworks(data[1].items, data[1].totalPages, data[1].pageIndex);
     });
-  }, [store]);
-
+  }, []);
+  useEffect(() => {
+    console.log(toJS(artworks));
+  }, [artworks]);
   return (
     <Flex bg="cyan.200" alignItems="flex-start">
       <Container
@@ -37,8 +50,23 @@ export const ArtworksList: FC = observer(() => {
         minH="calc(100vh - 100px)"
         h="100%"
       >
-        <Heading mb="26px">Каталог</Heading>
-        <Search />
+        <Flex>
+          <Heading mb="26px">Каталог</Heading>
+          <Spacer />
+          <Button
+            bg="cyan.600"
+            color="white"
+            onClick={() => {
+              navigate("/add");
+            }}
+          >
+            <HStack spacing="10px" alignItems="center" display="flex">
+              <Text>Создать</Text>
+              <AddIcon boxSize={3} />
+            </HStack>
+          </Button>
+        </Flex>
+        <Search searchType="artworks" />
         <Suspense
           fallback={
             <Flex alignItems="center" justifyContent="center">
@@ -47,7 +75,7 @@ export const ArtworksList: FC = observer(() => {
           }
         >
           <VStack my="20px">
-            {store.artworks.map((artwork) => (
+            {artworks.map((artwork) => (
               <LinkBox key={artwork.id} w="100%">
                 <LinkOverlay href={`/artwork/${artwork.id}`}>
                   <Artwork {...artwork} />
@@ -57,7 +85,7 @@ export const ArtworksList: FC = observer(() => {
           </VStack>
         </Suspense>
 
-        <Pagination />
+        <Pagination paginationType="artworks" />
       </Container>
     </Flex>
   );

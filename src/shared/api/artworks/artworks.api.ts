@@ -22,7 +22,11 @@ export const artworksAPI = {
   },
   async postArtworks(body: FormData): Promise<RequestData<IArtworkID>> {
     try {
-      const { data } = await apiInstance.post("/artworks", body);
+      const { data } = await apiInstance.post("/artworks", body, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return [false, data];
     } catch (error) {
       return [true, error];
