@@ -38,9 +38,7 @@ export const AuthorsPage = observer(() => {
   const [description, setDescription] = useState("");
   const [country, setCountry] = useState("");
 
-  const { authors, totalPages, pageIndex } = useStore(
-    (store) => store.authorsStore
-  );
+  const { authors } = useStore((store) => store.authorsStore);
   const setAuthors = useStore((store) =>
     store.authorsStore.setAuthors.bind(store.authorsStore)
   );
@@ -67,8 +65,8 @@ export const AuthorsPage = observer(() => {
     handleGetAuthors();
     onClose();
   };
-  const handleDelete = async (id: string, index: number) => {
-    const [error, data] = await authorsAPI.deleteAuthorById(id);
+  const handleDelete = async (id: string) => {
+    const [error] = await authorsAPI.deleteAuthorById(id);
     if (!error) handleGetAuthors();
   };
   useEffect(() => {
@@ -125,7 +123,7 @@ export const AuthorsPage = observer(() => {
             Добавить
           </Button>
           <Search searchType="authors" />
-          {authors.map((author, index) => (
+          {authors.map((author) => (
             <Card w="100%" bg="cyan.100" key={author.id}>
               <CardHeader>
                 <Flex alignItems="center">
@@ -133,7 +131,7 @@ export const AuthorsPage = observer(() => {
                   <Spacer />
                   <IconButton
                     aria-label="delete-button"
-                    onClick={() => handleDelete(author.id, index)}
+                    onClick={() => handleDelete(author.id)}
                   >
                     <DeleteIcon />
                   </IconButton>

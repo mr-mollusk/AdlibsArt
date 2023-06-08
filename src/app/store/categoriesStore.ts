@@ -1,5 +1,4 @@
 import { makeAutoObservable } from "mobx";
-import { IAuthors, authorsAPI } from "shared";
 import { RootStore } from "./rootStore";
 import { categoriesAPI } from "shared/api/categories";
 import { ICategory } from "shared/api/categories/categories.types";

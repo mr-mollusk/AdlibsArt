@@ -40,7 +40,7 @@ export const AddArtwork = () => {
   const [authors, setAuthors] = useState<IAuthors[]>([]);
 
   const [categoryVariants, setCategoryVariants] = useState<ICategory[]>([]);
-  const [authorsVariants, setAuthorsVariants] = useState<ICategory[]>([]);
+  const [authorsVariants, setAuthorsVariants] = useState<IAuthors[]>([]);
 
   useEffect(() => {
     const handleCategories = async () => {
@@ -82,7 +82,7 @@ export const AddArtwork = () => {
     if (newAuthor) setAuthors([...authors, newAuthor]);
   };
 
-  const handleDeleteAuthor = (index: number) => {
+  const handleDeleteAuthor = (index: string) => {
     setAuthors([...authors.filter((element) => element.id !== index)]);
   };
 

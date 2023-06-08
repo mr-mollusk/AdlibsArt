@@ -36,9 +36,7 @@ export const CategoriesPage = observer(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const { categories, totalPages, pageIndex } = useStore(
-    (store) => store.categoriesStore
-  );
+  const { categories } = useStore((store) => store.categoriesStore);
   const setCategories = useStore((store) =>
     store.categoriesStore.setCategories.bind(store.categoriesStore)
   );
@@ -64,8 +62,8 @@ export const CategoriesPage = observer(() => {
     handleGetCategories();
     onClose();
   };
-  const handleDelete = async (id: number, index: number) => {
-    const [error, data] = await categoriesAPI.deleteCategoryById(id);
+  const handleDelete = async (id: number) => {
+    const [error] = await categoriesAPI.deleteCategoryById(id);
 
     if (!error) handleGetCategories();
   };
@@ -116,7 +114,7 @@ export const CategoriesPage = observer(() => {
             Добавить
           </Button>
           <Search searchType="categories" />
-          {categories.map((category, index) => (
+          {categories.map((category) => (
             <Card w="100%" bg="cyan.100" key={category.id}>
               <CardHeader>
                 <Flex alignItems="center">
@@ -124,7 +122,7 @@ export const CategoriesPage = observer(() => {
                   <Spacer />
                   <IconButton
                     aria-label="delete-button"
-                    onClick={() => handleDelete(category.id, index)}
+                    onClick={() => handleDelete(category.id)}
                   >
                     <DeleteIcon />
                   </IconButton>
