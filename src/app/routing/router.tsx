@@ -3,6 +3,8 @@ import {
   AuthPage,
   Catalog,
   CategoriesPage,
+  CollectionEdit,
+  CollectionsPage,
   RegisterPage,
 } from "pages";
 import { AddArtwork } from "pages/addArtwork/addArtwork";
@@ -32,4 +34,6 @@ export const router = createBrowserRouter([
   },
   { path: "/authors", element: <AuthorsPage /> },
   { path: "/categories", element: <CategoriesPage /> },
+  { path: "/collections", element: <CollectionsPage /> },
+  { path: "/collection/:collectionID", element: <CollectionEdit /> },
 ]);

@@ -44,7 +44,9 @@ export const AddArtwork = () => {
 
   useEffect(() => {
     const handleCategories = async () => {
-      const [error, data] = await categoriesAPI.getCategories({});
+      const [error, data] = await categoriesAPI.getCategories({
+        pageSize: 10000,
+      });
       if (!error) {
         setCategoryVariants(data.items);
         setCategorySelect(data.items[0].name);

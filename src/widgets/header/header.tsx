@@ -52,6 +52,9 @@ export const Header: FC = observer(() => {
               <Link color="white" href="/categories">
                 <Text>Категории</Text>
               </Link>
+              <Link color="white" href="/collections">
+                <Text>Коллекции</Text>
+              </Link>
             </HStack>
             {isLogin ? (
               <Link color="white" onClick={logout}>
