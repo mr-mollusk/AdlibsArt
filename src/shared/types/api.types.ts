@@ -17,4 +17,10 @@ export type FilteredArtworkRequest = {
   query?: string;
   pageIndex?: number;
   pageSize?: number;
+  title?: string;
+  publisherName?: string;
+  publicationYearFrom?: string;
+  publicationYearTo?: string;
+  categories?: string;
+  authors?: string;
 };

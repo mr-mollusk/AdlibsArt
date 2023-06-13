@@ -6,13 +6,7 @@ import {
   PopoverTrigger,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  ReactNode,
-  ComponentProps,
-  FocusEventHandler,
-  ChangeEventHandler,
-  useRef,
-} from "react";
+import { ReactNode, ComponentProps, ChangeEventHandler, useRef } from "react";
 
 export interface IAutoCompleteElement {
   value: string;
@@ -49,11 +43,7 @@ export const AutoComplete = ({
   return (
     <Popover isOpen={isOpen} onClose={onClose} initialFocusRef={inputRef}>
       <PopoverTrigger>
-        <Input
-          onChange={handleChange}
-          ref={inputRef}
-          {...props}
-        />
+        <Input onChange={handleChange} ref={inputRef} {...props} />
       </PopoverTrigger>
       <PopoverContent>
         {options.map((option) => (

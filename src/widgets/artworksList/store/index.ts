@@ -46,8 +46,24 @@ export class ArtworksStore {
       console.log(this.artworks);
     }
   }
-  async filterPage(query: string) {
-    const data = await artworksAPI.getArtworks({ query: query });
+  async filterPage(
+    query: string,
+    title: string,
+    publisherName: string,
+    publicationYearFrom: string,
+    publicationYearTo: string,
+    categories: string,
+    authors: string
+  ) {
+    const data = await artworksAPI.getArtworks({
+      query: query,
+      title: title,
+      publisherName: publisherName,
+      publicationYearFrom: publicationYearFrom,
+      publicationYearTo: publicationYearTo,
+      categories: categories,
+      authors: authors,
+    });
     if (!data[0]) {
       this.artworks = data[1].items;
       this.pageIndex = data[1].pageIndex;

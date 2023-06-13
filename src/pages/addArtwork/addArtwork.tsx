@@ -26,7 +26,7 @@ import {
 } from "@chakra-ui/react";
 import { PageLayout } from "app/layouts";
 import { ChangeEventHandler, useEffect, useRef, useState } from "react";
-import { IAuthors, artworksAPI, authorsAPI } from "shared";
+import { IAuthors, artworksAPI } from "shared";
 import { categoriesAPI } from "shared/api/categories";
 import { ICategory } from "shared/api/categories/categories.types";
 import {
@@ -36,7 +36,6 @@ import {
 
 export const AddArtwork = () => {
   const [categorySelect, setCategorySelect] = useState("");
-  const [authorsSelect, setAuthorsSelect] = useState("");
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -47,7 +46,6 @@ export const AddArtwork = () => {
   const [authors, setAuthors] = useState<IAuthors[]>([]);
 
   const [categoryVariants, setCategoryVariants] = useState<ICategory[]>([]);
-  const [authorsVariants, setAuthorsVariants] = useState<IAuthors[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
@@ -93,17 +91,8 @@ export const AddArtwork = () => {
         setCategorySelect(data.items[0].name);
       }
     };
-    const handleAuthors = async () => {
-      const [error, data] = await authorsAPI.getAuthors({ pageSize: 10000 });
-      console.log(data);
 
-      if (!error) {
-        setAuthorsVariants(data.items);
-        setAuthorsSelect(data.items[0].name);
-      }
-    };
     handleCategories();
-    handleAuthors();
   }, []);
 
   const handleAddCategory = () => {
@@ -117,16 +106,13 @@ export const AddArtwork = () => {
   const handleDeleteCategory = (index: number) => {
     setCategories([...categories.filter((element) => element.id !== index)]);
   };
-  const handleAddAuthor = () => {
-    const newAuthor = authorsVariants.find(
-      (value) => value.name === authorsSelect
+
+  const handleAddAutoAuthor: IAuthorsAutocomplete["onChange"] = (
+    selectedAuthor
+  ) => {
+    const newAuthor = authors.find(
+      (author) => author.id === selectedAuthor!.id
     );
-
-    if (newAuthor) setAuthors([...authors, newAuthor]);
-  };
-
-  const handleAddAutoAuthor: IAuthorsAutocomplete["onChange"] = (selectedAuthor) => {
-    const newAuthor = authors.find((author) => author.id === selectedAuthor!.id);
     if (!newAuthor && selectedAuthor) {
       setAuthors((prev) => [...prev, selectedAuthor]);
     } else {
@@ -269,17 +255,6 @@ export const AddArtwork = () => {
                   </Wrap>
                   <HStack>
                     <AuthorsAutocomplete onChange={handleAddAutoAuthor} />
-                    <Select
-                      value={authorsSelect}
-                      onChange={(e) => setAuthorsSelect(e.target.value)}
-                    >
-                      {authorsVariants.map((author) => (
-                        <option key={`Автор_${author.id}`} value={author.name}>
-                          {author.name}
-                        </option>
-                      ))}
-                    </Select>
-                    <Button onClick={handleAddAuthor}>Добавить</Button>
                   </HStack>
                 </FormControl>
                 <Heading fontSize="xl">Сведения об издательстве:</Heading>
