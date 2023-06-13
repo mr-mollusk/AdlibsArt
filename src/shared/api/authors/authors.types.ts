@@ -18,3 +18,14 @@ export interface CategoriesRequest {
   pageSize?: number;
   pageIndex?: number;
 }
+
+export enum SortOrder {
+  Asc = "Ascending",
+  Desc = "Descending",
+}
+
+export interface AuthorsRequest extends CategoriesRequest {
+  authorName?: string;
+  country?: string;
+  sortOreder?: SortOrder;
+}

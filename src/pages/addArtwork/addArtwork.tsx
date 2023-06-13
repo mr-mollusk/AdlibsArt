@@ -13,23 +13,29 @@ import {
   HStack,
   Heading,
   IconButton,
+  Image,
   Input,
   Select,
+  Spacer,
   Tag,
   TagLabel,
   Textarea,
   VStack,
   Wrap,
+  useToast,
 } from "@chakra-ui/react";
 import { PageLayout } from "app/layouts";
-import { useEffect, useState } from "react";
-import { IAuthors, artworksAPI, authorsAPI } from "shared";
+import { ChangeEventHandler, useEffect, useRef, useState } from "react";
+import { IAuthors, artworksAPI } from "shared";
 import { categoriesAPI } from "shared/api/categories";
 import { ICategory } from "shared/api/categories/categories.types";
+import {
+  AuthorsAutocomplete,
+  IAuthorsAutocomplete,
+} from "shared/components/authorsAutocomplete";
 
 export const AddArtwork = () => {
   const [categorySelect, setCategorySelect] = useState("");
-  const [authorsSelect, setAuthorsSelect] = useState("");
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -40,27 +46,53 @@ export const AddArtwork = () => {
   const [authors, setAuthors] = useState<IAuthors[]>([]);
 
   const [categoryVariants, setCategoryVariants] = useState<ICategory[]>([]);
-  const [authorsVariants, setAuthorsVariants] = useState<IAuthors[]>([]);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPrevies] = useState<string[]>([]);
+
+  const toast = useToast();
+
+  const handleFileSelect: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const { files } = event.target;
+    if (files?.length === 0) {
+      return;
+    }
+    const firstFile = files?.item(0);
+    if (!firstFile) {
+      return;
+    }
+    setFiles([firstFile]);
+    setPrevies((prev) => {
+      prev.forEach((str) => window.URL.revokeObjectURL(str));
+      return [window.URL.createObjectURL(firstFile)];
+    });
+  };
+
+  const handleClearFiles = () => {
+    if (fileInputRef.current) {
+      // @ts-ignore
+      fileInputRef.current.value = null;
+    }
+    setFiles([]);
+    setPrevies((prev) => {
+      prev.forEach((str) => window.URL.revokeObjectURL(str));
+      return [];
+    });
+  };
 
   useEffect(() => {
     const handleCategories = async () => {
-      const [error, data] = await categoriesAPI.getCategories({});
+      const [error, data] = await categoriesAPI.getCategories({
+        pageSize: 10000,
+      });
       if (!error) {
         setCategoryVariants(data.items);
         setCategorySelect(data.items[0].name);
       }
     };
-    const handleAuthors = async () => {
-      const [error, data] = await authorsAPI.getAuthors({ pageSize: 10000 });
-      console.log(data);
 
-      if (!error) {
-        setAuthorsVariants(data.items);
-        setAuthorsSelect(data.items[0].name);
-      }
-    };
     handleCategories();
-    handleAuthors();
   }, []);
 
   const handleAddCategory = () => {
@@ -74,12 +106,21 @@ export const AddArtwork = () => {
   const handleDeleteCategory = (index: number) => {
     setCategories([...categories.filter((element) => element.id !== index)]);
   };
-  const handleAddAuthor = () => {
-    const newAuthor = authorsVariants.find(
-      (value) => value.name === authorsSelect
-    );
 
-    if (newAuthor) setAuthors([...authors, newAuthor]);
+  const handleAddAutoAuthor: IAuthorsAutocomplete["onChange"] = (
+    selectedAuthor
+  ) => {
+    const newAuthor = authors.find(
+      (author) => author.id === selectedAuthor!.id
+    );
+    if (!newAuthor && selectedAuthor) {
+      setAuthors((prev) => [...prev, selectedAuthor]);
+    } else {
+      toast({
+        status: "warning",
+        title: "Автор уже добавлен",
+      });
+    }
   };
 
   const handleDeleteAuthor = (index: string) => {
@@ -106,6 +147,10 @@ export const AddArtwork = () => {
 
     form.append("Categories", categoriesString);
     form.append("Authors", authorsString);
+
+    if (files.length !== 0) {
+      form.append("Image", files[0]);
+    }
     console.log(form);
 
     artworksAPI.postArtworks(form);
@@ -120,13 +165,33 @@ export const AddArtwork = () => {
           </CardHeader>
           <CardBody>
             <Flex>
-              <VStack flex="1 1 30%">
+              <VStack flex="1 1 28%">
                 <FormControl>
                   <FormLabel>Обложка:</FormLabel>
-                  <Input type="file" />
+                  <Input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileSelect}
+                    accept="image/png, image/gif, image/jpeg"
+                  />
+                  {previews.length === 1 && (
+                    <VStack sx={{ mt: 4, maxH: "400px" }}>
+                      <Image
+                        sx={{ maxH: "350px" }}
+                        src={previews[0]}
+                        alt="preview"
+                      />
+                      <IconButton
+                        aria-label="clear-files"
+                        onClick={handleClearFiles}
+                        icon={<DeleteIcon />}
+                      />
+                    </VStack>
+                  )}
                 </FormControl>
               </VStack>
-              <VStack flex="1 1 70%">
+              <Spacer />
+              <VStack flex="1 1 68%">
                 <FormControl>
                   <FormLabel>Название произведения:</FormLabel>
                   <Input
@@ -189,17 +254,7 @@ export const AddArtwork = () => {
                     ))}
                   </Wrap>
                   <HStack>
-                    <Select
-                      value={authorsSelect}
-                      onChange={(e) => setAuthorsSelect(e.target.value)}
-                    >
-                      {authorsVariants.map((author) => (
-                        <option key={`Автор_${author.id}`} value={author.name}>
-                          {author.name}
-                        </option>
-                      ))}
-                    </Select>
-                    <Button onClick={handleAddAuthor}>Добавить</Button>
+                    <AuthorsAutocomplete onChange={handleAddAutoAuthor} />
                   </HStack>
                 </FormControl>
                 <Heading fontSize="xl">Сведения об издательстве:</Heading>
@@ -218,6 +273,7 @@ export const AddArtwork = () => {
                     <Input
                       value={publicationYear}
                       onChange={(e) => setPublicationYear(e.target.value)}
+                      type="number"
                     />
                   </HStack>
                 </FormControl>

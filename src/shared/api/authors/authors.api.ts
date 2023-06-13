@@ -1,13 +1,13 @@
 import { RequestData, apiInstance } from "shared";
 import {
-  CategoriesRequest,
+  AuthorsRequest,
   IAuthors,
   PaginatedAuthorsResponse,
 } from "./authors.types";
 
 export const authorsAPI = {
   async getAuthors(
-    params: CategoriesRequest
+    params: AuthorsRequest
   ): Promise<RequestData<PaginatedAuthorsResponse>> {
     try {
       const { data } = await apiInstance.get("/authors/search", {
