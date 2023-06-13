@@ -1,5 +1,6 @@
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
+  Button,
   Card,
   CardBody,
   CardHeader,
@@ -14,6 +15,7 @@ import {
   Text,
   VStack,
   Wrap,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { PageLayout } from "app/layouts";
 import { IArtwork } from "entities";
@@ -21,8 +23,10 @@ import { observer } from "mobx-react-lite";
 import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { artworksAPI } from "shared";
+import { AddToCollection } from "widgets/addToCollection/addToCollection";
 
 export const ArtworkPage: FC = observer(() => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { artwokID } = useParams();
   const navigate = useNavigate();
   const [artwork, setArtwork] = useState<IArtwork>();
@@ -58,9 +62,14 @@ export const ArtworkPage: FC = observer(() => {
                   </HStack>
                 </Flex>
               </CardHeader>
+
               <CardBody minH="300px">
                 <HStack minH="300px">
-                  <Image w="35%" src={artwork.imageUrl} />
+                  <Image
+                    w="35%"
+                    src={artwork.imageUrl}
+                    alignSelf="flex-start"
+                  />
                   <VStack h="100%" alignItems="flex-start">
                     <Heading>{artwork.title}</Heading>
                     <Text>{artwork.description}</Text>
@@ -82,6 +91,9 @@ export const ArtworkPage: FC = observer(() => {
                         ))}
                       </Wrap>
                     </VStack>
+                    <Button onClick={onOpen}>Добавить в коллекцию</Button>
+
+                    <AddToCollection onClose={onClose} isOpen={isOpen} />
                   </VStack>
                 </HStack>
               </CardBody>

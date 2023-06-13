@@ -77,12 +77,12 @@ export const CategoriesPage = observer(() => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Добавить автора</ModalHeader>
+          <ModalHeader>Добавить категорию</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack>
               <FormControl>
-                <FormLabel>Имя автора</FormLabel>
+                <FormLabel>Название категории</FormLabel>
                 <Input value={name} onChange={(e) => setName(e.target.value)} />
               </FormControl>
               <FormControl>
