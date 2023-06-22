@@ -34,9 +34,11 @@ import { authorsAPI } from "shared";
 
 export const AuthorsPage = observer(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const deleteDisclosure = useDisclosure();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [country, setCountry] = useState("");
+  const [deleteId, setdeleteId] = useState("");
 
   const { authors } = useStore((store) => store.authorsStore);
   const setAuthors = useStore((store) =>
@@ -67,15 +69,49 @@ export const AuthorsPage = observer(() => {
       onClose();
     }
   };
-  const handleDelete = async (id: string) => {
-    const [error] = await authorsAPI.deleteAuthorById(id);
-    if (!error) handleGetAuthors();
+  const handleDelete = async () => {
+    const [error] = await authorsAPI.deleteAuthorById(deleteId);
+    if (!error) {
+      handleGetAuthors();
+    }
+
+    deleteDisclosure.onClose();
   };
   useEffect(() => {
     handleGetAuthors();
   }, []);
+
+  const deleteModalHandler = (id: string) => {
+    setdeleteId(id);
+    deleteDisclosure.onOpen();
+  };
+
   return (
     <PageLayout>
+      <Modal
+        isOpen={deleteDisclosure.isOpen}
+        onClose={deleteDisclosure.onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Подтвердите</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>Вы уверены, что хотите удалить?</ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={deleteDisclosure.onClose}
+            >
+              Закрыть
+            </Button>
+            <Button colorScheme="red" onClick={handleDelete}>
+              Удалить
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -115,15 +151,17 @@ export const AuthorsPage = observer(() => {
         </ModalContent>
       </Modal>
       <Container maxW="container.lg" py="20px">
-        <VStack>
-          <Button
-            onClick={onOpen}
-            alignSelf="flex-end"
-            bg="cyan.600"
-            color="white"
-          >
-            Добавить
-          </Button>
+        <VStack mb="20px">
+          {localStorage.getItem("isAdmin") === "True" && (
+            <Button
+              onClick={onOpen}
+              alignSelf="flex-end"
+              bg="cyan.600"
+              color="white"
+            >
+              Добавить
+            </Button>
+          )}
           <Search searchType="authors" />
           {authors.map((author) => (
             <Card w="100%" bg="cyan.100" key={author.id}>
@@ -131,12 +169,14 @@ export const AuthorsPage = observer(() => {
                 <Flex alignItems="center">
                   <Heading>{author.name}</Heading>
                   <Spacer />
-                  <IconButton
-                    aria-label="delete-button"
-                    onClick={() => handleDelete(author.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  {localStorage.getItem("isAdmin") === "True" && (
+                    <IconButton
+                      aria-label="delete-button"
+                      onClick={() => deleteModalHandler(author.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  )}
                 </Flex>
               </CardHeader>
               <CardBody>

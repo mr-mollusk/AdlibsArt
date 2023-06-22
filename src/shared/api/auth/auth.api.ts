@@ -5,8 +5,20 @@ import { IAuthBody, IAuthResponse, IRefreshBody } from "./auth.types";
 export const authAPI = {
   async signUp(body: IRegisterBody): Promise<RequestData<string>> {
     try {
-      const { data } = await apiInstance.post("/auth/sign-up", body);
-      return [false, data];
+      const response = await apiInstance.post("/auth/sign-up", body);
+      console.log(response);
+
+      if (response.status === 200) {
+        return [false, response.data];
+      }
+      //@ts-ignore
+      if (response.response.status === 400) {
+        console.log(1);
+
+      //@ts-ignore
+        return [true, response.response.data];
+      }
+      return [false, response.data];
     } catch (error) {
       return [true, error];
     }

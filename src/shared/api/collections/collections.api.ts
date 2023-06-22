@@ -74,7 +74,9 @@ export const collectionsAPI = {
       return [true, error];
     }
   },
-  async deleteCollection(collectionId: string) {
+  async deleteCollection(
+    collectionId: string
+  ): Promise<RequestData<ICollection>> {
     try {
       const { data } = await apiInstance.delete(`/collections/${collectionId}`);
 

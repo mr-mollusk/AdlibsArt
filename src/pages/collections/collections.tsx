@@ -32,9 +32,12 @@ import { ICollection, collectionsAPI } from "shared";
 
 export const CollectionsPage: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const deleteDisclosure = useDisclosure();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [collections, setCollections] = useState<ICollection[]>([]);
+  const [deleteId, setdeleteId] = useState("");
+
   const handleGetPersonalCollections = async () => {
     const [error, data] = await collectionsAPI.getPersonalCollections({});
     if (!error) {
@@ -52,12 +55,20 @@ export const CollectionsPage: FC = () => {
       onClose();
     }
   };
-  const deleteHandler = async (
+  const deleteHandler = async () => {
+    const [error] = await collectionsAPI.deleteCollection(deleteId);
+    if (!error) {
+      handleGetPersonalCollections();
+    }
+    deleteDisclosure.onClose();
+  };
+  const deleteModalHandler = (
     collectionID: string,
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    collectionsAPI.deleteCollection(collectionID);
+    setdeleteId(collectionID);
     e.stopPropagation();
+    deleteDisclosure.onOpen();
   };
   useEffect(() => {
     handleGetPersonalCollections();
@@ -65,6 +76,30 @@ export const CollectionsPage: FC = () => {
 
   return (
     <PageLayout>
+      <Modal
+        isOpen={deleteDisclosure.isOpen}
+        onClose={deleteDisclosure.onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Подтвердите</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>Вы уверены, что хотите удалить?</ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={deleteDisclosure.onClose}
+            >
+              Закрыть
+            </Button>
+            <Button colorScheme="red" onClick={deleteHandler}>
+              Удалить
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -118,7 +153,7 @@ export const CollectionsPage: FC = () => {
                       <IconButton
                         zIndex="2"
                         aria-label={""}
-                        onClick={(e) => deleteHandler(collection.id, e)}
+                        onClick={(e) => deleteModalHandler(collection.id, e)}
                       >
                         <DeleteIcon />
                       </IconButton>

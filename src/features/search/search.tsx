@@ -230,7 +230,7 @@ export const Search: FC<ISearch> = observer(({ searchType }) => {
             <FormControl>
               <HStack>
                 <FormLabel whiteSpace="nowrap">Год издания:</FormLabel>
-                <NumberInput>
+                <NumberInput min={0}>
                   <NumberInputField
                     value={publicationYearFrom}
                     onChange={(e) => setPublicationYearFrom(e.target.value)}
@@ -238,7 +238,7 @@ export const Search: FC<ISearch> = observer(({ searchType }) => {
                 </NumberInput>
 
                 <Text>-</Text>
-                <NumberInput>
+                <NumberInput min={0}>
                   <NumberInputField
                     value={publicationYearTo}
                     onChange={(e) => setPublicationYearTo(e.target.value)}

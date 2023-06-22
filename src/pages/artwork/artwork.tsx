@@ -11,6 +11,13 @@ import {
   Heading,
   IconButton,
   Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Tag,
   Text,
   VStack,
@@ -27,6 +34,7 @@ import { AddToCollection } from "widgets/addToCollection/addToCollection";
 
 export const ArtworkPage: FC = observer(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const deleteDisclosure = useDisclosure();
   const { artwokID } = useParams();
   const navigate = useNavigate();
   const [artwork, setArtwork] = useState<IArtwork>();
@@ -48,18 +56,47 @@ export const ArtworkPage: FC = observer(() => {
 
   return (
     <PageLayout>
+      <Modal
+        isOpen={deleteDisclosure.isOpen}
+        onClose={deleteDisclosure.onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Подтвердите</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>Вы уверены, что хотите удалить?</ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={deleteDisclosure.onClose}
+            >
+              Закрыть
+            </Button>
+            <Button colorScheme="red" onClick={deleteHandler}>
+              Удалить
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <Flex bg="cyan.200" minH="calc(100vh - 100px)">
         {artwork ? (
           <Container maxW="container.lg" py="40px">
             <Card w="100%" minH="300px">
               <CardHeader>
                 <Flex justifyContent="flex-end">
-                  <HStack spacing="5px">
-                    <EditIcon />
-                    <IconButton aria-label={""} onClick={deleteHandler}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </HStack>
+                  {localStorage.getItem("isAdmin") === "True" && (
+                    <HStack spacing="5px">
+                      <EditIcon />
+                      <IconButton
+                        aria-label={""}
+                        onClick={deleteDisclosure.onOpen}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </HStack>
+                  )}
                 </Flex>
               </CardHeader>
 

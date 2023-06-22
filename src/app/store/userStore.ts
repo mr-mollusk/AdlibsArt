@@ -23,10 +23,19 @@ export class UserStore {
     this.isLogin = true;
     const requestBody = { username: username, password: password };
     const [error, data] = await authAPI.signIn(requestBody);
+    console.log(data);
+    let isAdmin = "";
+    //@ts-ignore
+    if (data.roles.includes("Admin")) {
+      isAdmin = "True";
+    } else {
+      isAdmin = "False";
+    }
     if (!error) {
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
       localStorage.setItem("userID", data.id);
+      localStorage.setItem("isAdmin", isAdmin);
     }
   }
   async refresh() {

@@ -7,6 +7,7 @@ import {
   Checkbox,
   Container,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Heading,
@@ -40,8 +41,28 @@ export const RegisterForm = observer(() => {
           email: email,
           password: password,
         });
+
         if (!error) {
-        } else console.error(data);
+          console.log(data);
+
+          toast({
+            title: "Вы успешно зарегистрированы",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+        } else {
+          //@ts-ignore
+          data.forEach((error) =>
+            toast({
+              title: error.code,
+              description: error.description,
+              status: "error",
+              duration: 9000,
+              isClosable: true,
+            })
+          );
+        }
       } else
         toast({
           title: "Пароли не совпадают",
@@ -68,27 +89,51 @@ export const RegisterForm = observer(() => {
         </CardHeader>
         <CardBody>
           <VStack spacing="20px">
-            <FormControl>
+            <FormControl isInvalid={!name}>
               <FormLabel>Имя пользователя</FormLabel>
               <Input type="text" onChange={(e) => setName(e.target.value)} />
+              <FormErrorMessage>
+                Поле обязательно для заполнения
+              </FormErrorMessage>
             </FormControl>
-            <FormControl>
+            <FormControl isInvalid={!email}>
               <FormLabel>Электронная почта</FormLabel>
               <Input type="email" onChange={(e) => setEmail(e.target.value)} />
+              <FormErrorMessage>
+                Поле обязательно для заполнения
+              </FormErrorMessage>
             </FormControl>
-            <FormControl>
+            <FormControl isInvalid={!password || password.length < 5}>
               <FormLabel>Пароль</FormLabel>
               <Input
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
+              {!password ? (
+                <FormErrorMessage>
+                  Поле обязательно для заполнения
+                </FormErrorMessage>
+              ) : (
+                <FormErrorMessage>
+                  Пароль должен содержать не меньше 5 символов
+                </FormErrorMessage>
+              )}
             </FormControl>
-            <FormControl>
+            <FormControl
+              isInvalid={!passwordCheck || passwordCheck !== password}
+            >
               <FormLabel>Повторите пароль</FormLabel>
               <Input
                 type="password"
                 onChange={(e) => setPasswordCheck(e.target.value)}
               />
+              {!passwordCheck ? (
+                <FormErrorMessage>
+                  Поле обязательно для заполнения
+                </FormErrorMessage>
+              ) : (
+                <FormErrorMessage>Пароли должны совпадать</FormErrorMessage>
+              )}
             </FormControl>
             <FormControl>
               <HStack>

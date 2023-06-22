@@ -34,8 +34,11 @@ import { categoriesAPI } from "shared/api/categories";
 
 export const CategoriesPage = observer(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const deleteDisclosure = useDisclosure();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [deleteId, setdeleteId] = useState(0);
   const { categories } = useStore((store) => store.categoriesStore);
   const setCategories = useStore((store) =>
     store.categoriesStore.setCategories.bind(store.categoriesStore)
@@ -64,16 +67,45 @@ export const CategoriesPage = observer(() => {
       onClose();
     }
   };
-  const handleDelete = async (id: number) => {
-    const [error] = await categoriesAPI.deleteCategoryById(id);
+  const handleDelete = async () => {
+    const [error] = await categoriesAPI.deleteCategoryById(deleteId);
 
     if (!error) handleGetCategories();
   };
+  const deleteModalHandler = (id: number) => {
+    setdeleteId(id);
+    deleteDisclosure.onOpen();
+  };
+
   useEffect(() => {
     handleGetCategories();
   }, []);
   return (
     <PageLayout>
+      <Modal
+        isOpen={deleteDisclosure.isOpen}
+        onClose={deleteDisclosure.onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Подтвердите</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>Вы уверены, что хотите удалить?</ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={deleteDisclosure.onClose}
+            >
+              Закрыть
+            </Button>
+            <Button colorScheme="red" onClick={handleDelete}>
+              Удалить
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -106,15 +138,17 @@ export const CategoriesPage = observer(() => {
         </ModalContent>
       </Modal>
       <Container maxW="container.lg" py="20px">
-        <VStack>
-          <Button
-            onClick={onOpen}
-            alignSelf="flex-end"
-            bg="cyan.600"
-            color="white"
-          >
-            Добавить
-          </Button>
+        <VStack mb="20px">
+          {localStorage.getItem("isAdmin") === "True" && (
+            <Button
+              onClick={onOpen}
+              alignSelf="flex-end"
+              bg="cyan.600"
+              color="white"
+            >
+              Добавить
+            </Button>
+          )}
           <Search searchType="categories" />
           {categories.map((category) => (
             <Card w="100%" bg="cyan.100" key={category.id}>
@@ -122,12 +156,14 @@ export const CategoriesPage = observer(() => {
                 <Flex alignItems="center">
                   <Heading>{category.name}</Heading>
                   <Spacer />
-                  <IconButton
-                    aria-label="delete-button"
-                    onClick={() => handleDelete(category.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  {localStorage.getItem("isAdmin") === "True" && (
+                    <IconButton
+                      aria-label="delete-button"
+                      onClick={() => deleteModalHandler(category.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  )}
                 </Flex>
               </CardHeader>
               <CardBody>
